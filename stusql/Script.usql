@@ -3,8 +3,8 @@
 @input =
     EXTRACT [starttime] DateTime,
             [endtime] DateTime,
-            [startvalue] int,
-            [endvalue] int
+            [startvalue] double,
+            [endvalue] double
     FROM "temporal.csv" 
     USING Extractors.Csv(skipFirstNRows:1);
 

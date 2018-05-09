@@ -8,7 +8,7 @@ using System.Text;
 
 namespace USQLSharedLib
 {
-    class TimeSeriesOperator
+    public class TimeSeriesOperator
     {
         [SqlUserDefinedApplier]
         public class SplitResamplerApplier : IApplier
