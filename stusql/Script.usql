@@ -1,4 +1,4 @@
-﻿REFERENCE ASSEMBLY USQLSharedLib;
+﻿REFERENCE ASSEMBLY master.USQLSharedLib;
 
 @input =
     EXTRACT [starttime] DateTime,
@@ -9,12 +9,12 @@
     USING Extractors.Csv(skipFirstNRows:1);
 
 @output=
-    SELECT Properties.datehour,
+    SELECT Properties.bin,
            Properties.split_delta,
            Properties.after_value
     FROM @input AS i
          CROSS APPLY
-             USING new USQLSharedLib.TimeSeriesOperator.SplitResamplerApplier("starttime", "endtime", "startvalue", "endvalue") AS Properties(datehour DateTime, split_delta double, after_value double);
+             USING new USQLSharedLib.TimeSeriesOperator.SplitResamplerApplier("starttime", "endtime", "startvalue", "endvalue", new TimeSpan(1,0,0)) AS Properties(bin DateTime, split_delta double, after_value double);
 
 OUTPUT @output
     TO "temporal_processed.csv"
