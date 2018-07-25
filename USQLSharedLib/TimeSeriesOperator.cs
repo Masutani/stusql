@@ -211,5 +211,58 @@ namespace USQLSharedLib
             DateTime binStart = time.Date + binOffset;
             return (binStart);
         }
+
+
+        [SqlUserDefinedApplier]
+        public class SplitTimeOfDay : IApplier
+        {
+            string startColumn;
+            string endColumn;
+
+            public SplitTimeOfDay(string startColumn, string endColumn)
+            {
+                this.startColumn = startColumn;
+                this.endColumn = endColumn;
+            }
+
+            public override IEnumerable<IRow> Apply(IRow input, IUpdatableRow output)
+            {
+                DateTime startTime = input.Get<DateTime>(startColumn);
+                DateTime endTime = input.Get<DateTime>(endColumn);
+                var startDate = startTime.Date;
+                var endDate = endTime.Date;
+                DateTime startTimeOfDay;
+                DateTime endTimeOfDay;
+
+                var lastSecond = new TimeSpan(23, 59, 59);
+
+                for (var dt = startDate; dt <= endDate; dt = dt.AddDays(1))
+                {
+
+                    if (dt == startDate)
+                    {
+                        startTimeOfDay = startTime;
+
+                    }
+                    else
+                    {
+                        startTimeOfDay = dt;
+                    }
+                    if (dt == endDate)
+                    {
+                        endTimeOfDay = endTime;
+                    }
+                    else
+                    {
+                        endTimeOfDay = dt + lastSecond;
+                    }
+                    output.Set<DateTime>("startTimeOfDay", startTimeOfDay);
+                    output.Set<DateTime>("endTimeOfDay", endTimeOfDay);
+                    yield return output.AsReadOnly();
+                }
+
+            }
+
+        }
     }
 }
