@@ -83,12 +83,13 @@ namespace USQLSharedLib
                         range = this.binSize;
                     }
 
-                    if (range > new TimeSpan(this.binSize.Ticks / 2))
-                    {
+                    //if (range > new TimeSpan(this.binSize.Ticks / 2))
+                    //{
                         output.Set<DateTime>("bin", t);
                         output.Set<Type>("value", startValue);
+                        output.Set<double>("range", range.TotalSeconds);
                         yield return output.AsReadOnly();
-                    }
+                    //}
                 }
             }
         }
