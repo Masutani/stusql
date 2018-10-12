@@ -88,6 +88,8 @@ namespace USQLSharedLib
                         output.Set<DateTime>("bin", t);
                         output.Set<Type>("value", startValue);
                         output.Set<double>("range", range.TotalSeconds);
+
+                        Console.Out.WriteLine("Bin { 0} start { 1} range { 2}", t, startValue, range.TotalSeconds);
                         yield return output.AsReadOnly();
                     //}
                 }
@@ -140,7 +142,7 @@ namespace USQLSharedLib
 
             IEnumerable<IRow> interpolate(DateTime startTime, DateTime endTime, double startValue, double endValue, IUpdatableRow output)
             {
-                var v = setupSpanVariables(startTime, endTime, startValue, endValue);
+                var v = setupSpanVariables(startTime, endTime, startValue, endValue,this.binSize);
 
                 var yhs1 = v.slope * (v.startBin.Ticks + this.binSize.Ticks) + v.intercept;
                 var yhe = v.slope * v.endBin.Ticks + v.intercept;
@@ -189,13 +191,13 @@ namespace USQLSharedLib
                 public double intercept;
             }
 
-            SetupVariables setupSpanVariables(DateTime startTime, DateTime endTime, double startValue, double endValue)
+            static SetupVariables setupSpanVariables(DateTime startTime, DateTime endTime, double startValue, double endValue, TimeSpan binSize)
             {
                 var slope = (endValue - startValue) / (endTime.Ticks - startTime.Ticks);
                 return (new SetupVariables()
                 {
-                    startBin = getOffsetBin(startTime, this.binSize),
-                    endBin = getOffsetBin(endTime, this.binSize),
+                    startBin = getOffsetBin(startTime, binSize),
+                    endBin = getOffsetBin(endTime, binSize),
                     slope = slope,
                     intercept = startValue - slope * startTime.Ticks
                 });
@@ -206,7 +208,7 @@ namespace USQLSharedLib
         static DateTime getOffsetBin(DateTime time, TimeSpan binSize)
         {
             var dayOffset = time.Subtract(time.Date);
-            long binIndex = dayOffset.Ticks / binSize.Ticks;
+            long binIndex = (long)Math.Floor(((double)dayOffset.Ticks / (double)binSize.Ticks));
             var binOffset = new TimeSpan(binIndex * binSize.Ticks);
             DateTime binStart = time.Date + binOffset;
             return (binStart);
