@@ -4,7 +4,8 @@
     EXTRACT [starttime] DateTime,
             [endtime] DateTime,
             [startvalue] double,
-            [endvalue] double
+            [endvalue] double,
+            [status] double
     FROM "temporal.csv" 
     USING Extractors.Csv(skipFirstNRows:1);
 
@@ -16,6 +17,19 @@
          CROSS APPLY
              USING new USQLSharedLib.TimeSeriesOperator.SplitResamplerApplier("starttime", "endtime", "startvalue", "endvalue", new TimeSpan(1,0,0)) AS Properties(bin DateTime, split_delta double, after_value double);
 
+@output2=
+    SELECT Properties.bin,
+           Properties.range,
+           Properties.value
+    FROM @input AS i
+         CROSS APPLY
+             USING new USQLSharedLib.TimeSeriesOperator.SplitLocfApplier("starttime", "endtime", "status", new TimeSpan(1,0,0)) AS Properties(bin DateTime, range double, value double);
+
+
+
 OUTPUT @output
     TO "temporal_processed.csv"
+    USING Outputters.Csv(outputHeader:true);
+OUTPUT @output2
+    TO "temporal_processed2.csv"
     USING Outputters.Csv(outputHeader:true);
