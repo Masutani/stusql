@@ -28,7 +28,10 @@
     </ScriptCode>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="temporal.csv">
+    <Folder Include="sample" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sample\temporal.csv">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>
