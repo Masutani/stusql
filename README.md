@@ -14,8 +14,16 @@ Spatio temporal libirary for U-SQL.
 - Split time duration rows to in-day durations.
 
 
-Release note
+### Release note
 
 2019.06.24
   - geohash, distance applier added
-  - Spliter from duration rows to in-day durations added
+
+2018.07.12
+  - Duration splitter into in-day durations added
+
+2018.07.03
+  - LOCF is added
+
+2018.05.09
+  - first version
