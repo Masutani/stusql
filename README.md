@@ -9,9 +9,9 @@ Spatio temporal libirary for U-SQL.
 
 ## temporal operations summary
 
-- interpolation and resample fixed tick time series from time span data for arbitral bin size
-- interpolation with LOCF (Last Observation Carried Forward) fixed tick time series from time span data for arbitral bin size
-- Split time duration rows to in-day durations.
+- split-Resample (interpolation and resample fixed tick time series from time span data for arbitral bin size)
+- split-LOCF (interpolation with LOCF (Last Observation Carried Forward) fixed tick time series from time span data for arbitral bin size)
+- Split split-Time of Day (time duration rows to in-day durations)
 
 
 # Usage
@@ -19,18 +19,24 @@ Spatio temporal libirary for U-SQL.
 ## spatial operations
 
 ### revoerse geocoding
-
 Use ReverseGeocoder : IProcessor in USQLSharedLib
 
 ### geohash decoding, encoding
-
 Use GeoHashDecoder : IProcessor in USQLSharedLib
 
 ### harversine distance calculation
-
 Use DistApplier : IApplier in USQLSharedLib
 
+## temporal operations
 
+### split-Resample
+Use SplitResamplerApplier : IApplier in USQLSharedLib
+
+### split-LOCF
+Use SplitLocfApplier : IApplier in USQLSharedLib
+
+### split-Time of Day
+use SplitTimeOfDay : IApplier in USQLSharedLib
 
 # Release note
 
